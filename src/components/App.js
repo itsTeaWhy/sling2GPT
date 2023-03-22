@@ -1,10 +1,10 @@
 import React from 'react';
 import Navbar from './Navbar';
-import MainContainer from './MainContainer';
 import { useEffect, useState } from 'react';
 
 export default function App() {
   const [rerender, setRerender] = useState(false);
+  const [userData, setUserData] = useState({});
 
   // onMount: grab code param from URL and store
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function App() {
     // hold token in local storage
     // allows login creds to persist for longer
 
-    if (codeParam && !localStorage.getItem('accessToken')) {
+    if (codeParam && !localStorage.getItem('access_token')) {
       console.log('localStorage setter block entered');
       const getAccessToken = async () => {
         await fetch('/getAccessToken?code=' + codeParam, {
@@ -26,7 +26,6 @@ export default function App() {
             return res.json();
           })
           .then((data) => {
-            console.log('App.js getAccessToken log: ' + data);
             // if successful fetch
             //  set to local storage
             //  force rerender
@@ -52,14 +51,49 @@ export default function App() {
         res.json();
       })
       .then((data) => {
-        console.log('data from /getUserData route handler: ' + data);
+        setUserData(data);
+        console.log('-- USER DATA BELOW --');
+        console.log(userData);
       });
   };
+
+  const CLIENT_ID = '85978a1a65de96401ae0';
+
+  function loginWithGithub() {
+    window.location.assign(
+      'https://github.com/login/oauth/authorize/?client_id=' + CLIENT_ID
+    );
+  }
 
   return (
     <div>
       <Navbar />
-      <MainContainer setRerender={setRerender} />
+      <div className='maincontainer'>
+        {localStorage.getItem('access_token') ? (
+          <>
+            <h1>We have the access_token</h1>
+            <button className='getdata-bt' onClick={getUserData}>
+              GET DATA
+            </button>
+            <button
+              className='github-signout-btn'
+              onClick={() => {
+                localStorage.removeItem('access_token');
+                setRerender(!rerender);
+              }}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <h3>User is not logged in</h3>
+            <button className='github-login-btn' onClick={loginWithGithub}>
+              Login With Github
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

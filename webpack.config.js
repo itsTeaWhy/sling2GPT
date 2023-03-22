@@ -13,16 +13,16 @@ module.exports = {
       template: path.resolve(__dirname, './index.html'),
     }),
   ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
-    compress: true,
-    port: 8080,
-    proxy: {
-      '/api': 'http://localhost:3000',
-    },
-  },
+  // devServer: {
+  //   static: {
+  //     directory: path.join(__dirname, 'public'),
+  //   },
+  //   compress: true,
+  //   port: 3000,
+  //   proxy: {
+  //     '/api': 'http://localhost:3000',
+  //   },
+  // },
   module: {
     rules: [
       {

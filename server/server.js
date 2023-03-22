@@ -40,7 +40,6 @@ app.get('/getAccessToken', async (req, res) => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       res.json(data);
     });
 });
