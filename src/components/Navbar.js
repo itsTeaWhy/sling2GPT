@@ -22,7 +22,7 @@ export default function Navbar() {
         <a href='/#'>Won't</a>
         <a href='/#'>Use</a>
         <a className='emoji' href='/#'>
-          😜
+          😜✌️
         </a>
         <button className='nav-btn nav-close-btn' onClick={showNavbar}>
           <FaTimes />
