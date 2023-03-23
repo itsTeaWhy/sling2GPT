@@ -1,9 +1,8 @@
 {
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack",
-    "proxy": "nodemon proxy.js"
+    "dev": "NODE_ENV=development webpack"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -12,7 +11,7 @@
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "html-webpack-plugin": "^5.5.0",
-    "nodemon": "^2.0.21",
+    "nodemon": "^2.0.22",
     "react-icons": "^4.8.0",
     "sass": "^1.59.3",
     "sass-loader": "^13.2.1",

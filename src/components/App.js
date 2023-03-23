@@ -1,21 +1,20 @@
 import React from 'react';
 import Navbar from './Navbar';
 import { useEffect, useState } from 'react';
+import AppStateContext from './AppStateContext';
+import MainContainer from './MainContainer';
 
 export default function App() {
   const [rerender, setRerender] = useState(false);
   const [userData, setUserData] = useState({});
 
-  // onMount: grab code param from URL and store
+  // onMount: grab code param from URL and store in LS
   useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const codeParam = urlParams.get('code');
-    console.log(codeParam);
 
-    // hold token in local storage
-    // allows login creds to persist for longer
-
+    // If no token in LS, get token and store in LS
     if (codeParam && !localStorage.getItem('access_token')) {
       console.log('localStorage setter block entered');
       const getAccessToken = async () => {
@@ -26,9 +25,6 @@ export default function App() {
             return res.json();
           })
           .then((data) => {
-            // if successful fetch
-            //  set to local storage
-            //  force rerender
             if (data.access_token) {
               localStorage.setItem('access_token', data.access_token);
               setRerender(!rerender);
@@ -37,9 +33,9 @@ export default function App() {
       };
       getAccessToken();
     }
-  }, []); // end of useEffect method
+  }, []);
 
-  //getUserData
+  //getUserData & update userData
   const getUserData = async () => {
     await fetch('/getUserData', {
       method: 'GET',
@@ -48,17 +44,17 @@ export default function App() {
       },
     })
       .then((res) => {
-        res.json();
+        return res.json();
       })
       .then((data) => {
         setUserData(data);
-        console.log('-- USER DATA BELOW --');
-        console.log(userData);
+        console.log('below is the data from getUserData');
+        console.log(data);
       });
   };
 
+  // initial call to GH API
   const CLIENT_ID = '85978a1a65de96401ae0';
-
   function loginWithGithub() {
     window.location.assign(
       'https://github.com/login/oauth/authorize/?client_id=' + CLIENT_ID
@@ -66,34 +62,20 @@ export default function App() {
   }
 
   return (
-    <div>
-      <Navbar />
-      <div className='maincontainer'>
-        {localStorage.getItem('access_token') ? (
-          <>
-            <h1>We have the access_token</h1>
-            <button className='getdata-bt' onClick={getUserData}>
-              GET DATA
-            </button>
-            <button
-              className='github-signout-btn'
-              onClick={() => {
-                localStorage.removeItem('access_token');
-                setRerender(!rerender);
-              }}
-            >
-              Sign out
-            </button>
-          </>
-        ) : (
-          <>
-            <h3>User is not logged in</h3>
-            <button className='github-login-btn' onClick={loginWithGithub}>
-              Login With Github
-            </button>
-          </>
-        )}
+    <AppStateContext.Provider
+      value={{
+        rerender,
+        setRerender,
+        userData,
+        setUserData,
+        getUserData,
+        loginWithGithub,
+      }}
+    >
+      <div>
+        <Navbar />
+        <MainContainer />
       </div>
-    </div>
+    </AppStateContext.Provider>
   );
 }
