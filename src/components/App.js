@@ -16,7 +16,6 @@ export default function App() {
 
     // If no token in LS, get token and store in LS
     if (codeParam && !localStorage.getItem('access_token')) {
-      console.log('localStorage setter block entered');
       const getAccessToken = async () => {
         await fetch('/getAccessToken?code=' + codeParam, {
           method: 'GET',
@@ -48,8 +47,6 @@ export default function App() {
       })
       .then((data) => {
         setUserData(data);
-        console.log('below is the data from getUserData');
-        console.log(data);
       });
   };
 
@@ -68,8 +65,8 @@ export default function App() {
         setRerender,
         userData,
         setUserData,
-        getUserData,
         loginWithGithub,
+        getUserData,
       }}
     >
       <div>

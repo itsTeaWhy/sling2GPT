@@ -18,8 +18,7 @@ app.get('/', (req, res) => {
 
 // getAccessToken called from frontend
 // code passed from frontend
-app.get('/getAccessToken', async (req, res) => {
-  console.log('getAccessToken route entered');
+app.get('/getAccessToken/', async (req, res) => {
   const CODE = req.query.code;
 
   const params =
@@ -30,7 +29,7 @@ app.get('/getAccessToken', async (req, res) => {
     '&code=' +
     CODE;
 
-  await fetch('https://github.com/login/oauth/access_token' + params, {
+  return await fetch('https://github.com/login/oauth/access_token' + params, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -40,7 +39,7 @@ app.get('/getAccessToken', async (req, res) => {
       return response.json();
     })
     .then((data) => {
-      res.json(data);
+      return res.json(data);
     });
 });
 
@@ -58,8 +57,7 @@ app.get('/getUserData', async (req, res) => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
-      res.json(data);
+      return res.json(data);
     });
 });
 
